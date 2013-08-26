@@ -4,10 +4,13 @@ TMP_DIR=`mktemp -d`
 FILE_NAME=scan_`date +%Y%m%d-%H%M%S`
 cd $TMP_DIR
 echo "################## Scanning ###################"
-scanimage --resolution 150 --batch=scan_%03d.pnm --format=pnm --mode Gray --device-name "fujitsu:ScanSnap S1500:67953" --page-width 210 --page-height 297 --sleeptimer 1 -y 297 -x 210
+scanimage --resolution 150 --batch=scan_%03d.pnm --format=pnm --mode Gray --device-name "fujitsu:ScanSnap S1500:67953" --source "ADF Duplex" --page-width 210 --page-height 297 --sleeptimer 1 -y 297 -x 210
+echo "################## Cleaning ###################"
+for f in ./*.pnm; do
+   unpaper –size a4 –overwrite "$f" "$f"
+done
 echo "############## Converting to PDF ##############"
 mogrify -format tif *.pnm
-
 echo "################ Cleaning Up ################"
 
 for f in ./*.tif; do
