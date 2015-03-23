@@ -1,4 +1,6 @@
 #!/bin/bash
+# Thanks to Andreas Gohr (http://www.splitbrain.org/) for the initial work 
+# https://github.com/splitbrain/paper-backup/
 OUT_DIR=~/scan
 BASE="~/tmp"
 cd $BASE
