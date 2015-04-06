@@ -24,9 +24,8 @@ done
 
 # check if there is blank pages
 echo 'checking for blank pages...'
-echo "################## Cleaning ###################"
 for f in ./*.pnm; do
-    unpaper --size "a4" --overwrite "$f" `echo "$f" | sed 's/scan/scan_clean/g'`
+    unpaper --size "a4" --overwrite "$f" `echo "$f" | sed 's/scan/scan_unpaper/g'`
     #need to rename and delete original since newer versions of unpaper can't use same file name
     rm -f "$f"
 done
