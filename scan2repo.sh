@@ -2,8 +2,6 @@
 # Thanks to Andreas Gohr (http://www.splitbrain.org/) for the initial work 
 # https://github.com/splitbrain/paper-backup/
 OUT_DIR=~/scan
-BASE="~/tmp"
-cd $BASE
 TMP_DIR=`mktemp -d`
 FILE_NAME=scan_`date +%Y%m%d-%H%M%S`
 LANGUAGE="eng" 				# the tesseract language - ensure you installed it
@@ -24,20 +22,13 @@ for i in scan_*.pnm; do
     mogrify -shave 50x5 "${i}"
 done
 
-# check if the page is blank
-# http://philipp.knechtges.com/?p=190
+# check if there is blank pages
 echo 'checking for blank pages...'
-for i in scan_*.pnm; do
-    echo "${i}"
-    histogram=`convert "${i}" -threshold 50% -format %c histogram:info:-`
-    white=`echo "${histogram}" | grep "#FFFFFF" | sed -n 's/^ *\(.*\):.*$/\1/p'`
-    black=`echo "${histogram}" | grep "#000000" | sed -n 's/^ *\(.*\):.*$/\1/p'`
-    blank=`echo "scale=4; ${black}/${white} < 0.005" | bc`
-
-    if [ ${blank} -eq "1" ]; then
-        echo "${i} seems to be blank - removing it..."
-        rm "${i}"
-    fi
+echo "################## Cleaning ###################"
+for f in ./*.pnm; do
+    unpaper --size "a4" --overwrite "$f" `echo "$f" | sed 's/scan/scan_clean/g'`
+    #need to rename and delete original since newer versions of unpaper can't use same file name
+    rm -f "$f"
 done
 
 # apply text cleaning and convert to tif
